@@ -316,8 +316,27 @@ $(document).ready(function() {
 	function respondToChange(event) {
 		// convert the old bands into history records before deleting them...
 		var allBandsDiv = $('#allbands');
-		var newAllBandsDiv = $('<div></div>');
-		
+		var historyDiv = $('#history');
+
+		// augment the history with the records from existing data
+		// would be better to sort them
+		allBandsDiv.children().each(function(index) {
+			var bandEntry = getBandEntry($(this));
+			if (bandEntry) {
+				$(historyDiv).append('<li>' + 
+						'<span class="historyinterval">' +
+						getBandInterval($(this)) +
+						'</span>' + 
+						' => ' +
+						'<span class="historyentry">' + 
+						bandEntry +
+						'</span>' +
+						'</li>'
+				);
+			}
+		});	
+		allBandsDiv.empty();
+
 		var uniqueNumbers = extractUniqueNumbersFromString($(this).val());
 		uniqueNumbers.sort(ascendingNumericCompare);
 
@@ -327,7 +346,7 @@ $(document).ready(function() {
 		var upperBound = new IntervalBound(-Infinity, false);
 
 		function outputBand() {
-			newAllBandsDiv.append(makeBandFromInterval(new Interval(lowerBound, upperBound)).addClass(index % 2 ? 'odd' : 'even'));
+			allBandsDiv.append(makeBandFromInterval(new Interval(lowerBound, upperBound)).addClass(index % 2 ? 'odd' : 'even'));
 		}
 		
 		for (index = 0; index < uniqueNumbers.length; index++) {
@@ -347,17 +366,13 @@ $(document).ready(function() {
 		// bound values after the modification.  If they did, we preserve
 		// the entry that the user gave for that.
 		
-		allBandsDiv.children().each(function(index) {
-			$(this).addClass("trashed");
-		});
-		
-		newAllBandsDiv.children().each(function(newIndex) {
+		allBandsDiv.children().each(function(newIndex) {
 			var newBand = $(this);
 			var newInterval = getBandInterval(newBand);
 			
-			allBandsDiv.children().each(function(oldIndex) {
-				var oldBand = $(this);
-				var oldInterval = getBandInterval(oldBand);
+			historyDiv.children().each(function(oldIndex) {
+				var historyItem = $(this);
+				var oldInterval = parseInterval(historyItem.find(".historyinterval").text());
 				
 				if ((oldInterval.lowerBound.value == newInterval.lowerBound.value) &&
 						(oldInterval.upperBound.value == newInterval.upperBound.value)) {
@@ -365,26 +380,11 @@ $(document).ready(function() {
 							oldInterval.lowerBound.isInclusive,
 							oldInterval.upperBound.isInclusive
 					);
-					setBandEntry(newBand, getBandEntry(oldBand));
-					oldBand.removeClass("trashed");
+					setBandEntry(newBand, historyItem.find(".historyentry").text());
+					historyItem.remove();
 				}
 			});
 		});
-		
-		// If an edit to the number sequence lost any of our data inside ranges,
-		// rather than throw it away we put it off to the side into a history.
-		// The user may resurrect it if they wish (decent UI not yet implemented)
-		allBandsDiv.children().each(function(index) {
-			var maybeTrashedBand = $(this);
-			if (maybeTrashedBand.hasClass("trashed") && getBandEntry(maybeTrashedBand).length) {
-				$("#trashcan").append('<li>' +
-						getBandInterval(maybeTrashedBand) + ' => ' +
-						getBandEntry(maybeTrashedBand) + '</li>');
-			}
-		});
-		
-		allBandsDiv.empty();
-		allBandsDiv.append(newAllBandsDiv.children().detach());
 	}
 
 
