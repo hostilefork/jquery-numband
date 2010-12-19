@@ -321,19 +321,16 @@ $(document).ready(function() {
 		// augment the history with the records from existing data
 		// would be better to sort them
 		allBandsDiv.children().each(function(index) {
-			var bandEntry = getBandEntry($(this));
-			if (bandEntry) {
-				$(historyDiv).append('<li>' + 
-						'<span class="historyinterval">' +
-						getBandInterval($(this)) +
-						'</span>' + 
-						' => ' +
-						'<span class="historyentry">' + 
-						bandEntry +
-						'</span>' +
-						'</li>'
-				);
-			}
+			$(historyDiv).append('<li>' + 
+					'<span class="historyinterval">' +
+					getBandInterval($(this)) +
+					'</span>' + 
+					' => ' +
+					'<span class="historyentry">' + 
+					getBandEntry($(this)) +
+					'</span>' +
+					'</li>'
+			);
 		});	
 		allBandsDiv.empty();
 
@@ -384,6 +381,17 @@ $(document).ready(function() {
 					historyItem.remove();
 				}
 			});
+		});
+		
+		// We initially stored history items that had no entry text because they
+		// help us capture any range inclusiveness/exclusiveness the user might
+		// have entered.  But we only preserve that over a single edit... if
+		// you adjust the range inclusiveness, don't enter a value, and change
+		// so the range doesn't exist anymore... we forget.
+		historyDiv.children().each(function(oldIndex) {
+			if (!$(this).find(".historyentry").text()) {
+				$(this).remove();
+			}
 		});
 	}
 
