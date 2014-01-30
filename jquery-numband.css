@@ -1,0 +1,96 @@
+.even {
+	background: seagreen;
+	color: azure;
+	border: solid 1px seagreen;
+}
+
+.odd {
+	background: azure;
+	color: seagreen;
+	border: solid 1px seagreen;
+}
+
+#header, .band {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 5px;
+}
+
+.number {
+	font-size: 24px;
+}
+
+.entry {
+	margin-left: 30px;
+}
+
+.plusinfinity, .minusinfinity {
+	font-weight: bold;
+	font-size: 32px;
+}
+
+.limitup, .limitdown {
+	padding-right: 5px;
+	padding-left: 5px;
+	margin-right: 5px;
+	cursor: default;
+}
+
+.odd .limitup, .odd .limitdown {
+	/* might be nice as a hover, looks noisy otherwise */
+	/* border: solid 1px seagreen; */
+}
+
+.even .limitup, .even .limitdown {
+	/* might be nice as a hover, looks noisy otherwise */
+	/* border: solid 1px azure; */
+}
+
+.entry {
+	width: 80%;
+	/* I'm no CSS expert, and I dunno how to do this right. */
+}
+
+#wrapper {
+	text-align: left;
+	margin: 0px auto;
+	padding: 0px;
+	border:0;
+	width: 100%;
+	background: url("/path/to/your/background_cols.gif") repeat;
+}
+
+#header {
+	margin: 0 0 15px 0;
+}
+
+#side-a {
+	float: left;
+	width: 50%;
+}
+
+#side-b { 
+	margin-left: 40px;
+	float: left;
+	text-align: left;
+	width: 400px;
+	height: 1% /* Holly hack for Peekaboo Bug */
+}
+
+#footer {
+	clear: both;
+	background: white;
+	/* note: margins and padding are messed up in this div. */
+	
+	padding-left: 10px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-right: 10px;
+}
+
+#feedback { font-size: 1.4em; }
+#selectable .ui-selecting { background: #FECA40; }
+#selectable .ui-selected { background: #F39814; color: white; }
+#selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
