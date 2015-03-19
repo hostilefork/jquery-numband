@@ -116,17 +116,37 @@ $(document).ready(function() {
 	}
 	
 	// Extract unique numbers from string and return an array.
-	// Finds both floats and integers
+	// Finds both floats and integers.
 	function extractUniqueNumbersFromString(str) {
-		var numericChars = "1234567890.-";
+		var numericChars = "1234567890.";
 		var result = [];
 		var buffer = "";
+		var nextMaybeNegative = false;
 		
 		for (var index = 0; index < str.length; index++) {
-			var isNumericChar = (numericChars.indexOf(str[index]) != -1);
-			if (isNumericChar) {
-				buffer = buffer + str[index];
+			// For why charAt vs. [], see:
+			// http://stackoverflow.com/a/5943760
+			var ch = str.charAt(index);
+
+			// We don't want to interpret 10-20 as 10 and -20 because that looks
+			// very much like a range notation.  (So does 10 - 20)  We only
+			// accept it to make things negative if the building buffer is
+			// empty AND the next number is a digit.
+			if ((ch == '-') && !buffer) {
+				nextMaybeNegative = true;
+				continue;
 			}
+
+			var isNumericChar = (numericChars.indexOf(ch) != -1);
+			if (isNumericChar) {
+				if (nextMaybeNegative) {
+					buffer += '-'
+				}
+				buffer += ch;
+			}
+
+			nextMaybeNegative = false;
+
 			if (!isNumericChar || (index == str.length - 1)) {
 				var value = null;
 				if (buffer.length) {
